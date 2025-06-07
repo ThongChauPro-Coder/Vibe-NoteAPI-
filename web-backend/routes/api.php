@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/recipients/{recipientId}', [NoteShareController::class, 'revokeRecipient']);
 });
 
+Route::put('/notes/{id}/autosave', [NoteController::class, 'autoSave']);
 Route::apiResource('notes', NoteController::class);
 Route::apiResource('users', UserController::class);
 Route::apiResource('labels', LabelController::class);
@@ -44,3 +45,4 @@ Route::post('notes/{id}/set-password', [NoteController::class, 'setPassword']);
 Route::post('notes/{id}/change-password', [NoteController::class, 'changePassword']);
 Route::post('notes/{id}/unlock', [NoteController::class, 'unlock']);
 Route::post('notes/{id}/disable-password', [NoteController::class, 'disablePassword']);
+

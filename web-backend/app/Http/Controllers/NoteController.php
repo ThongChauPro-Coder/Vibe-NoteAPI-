@@ -34,10 +34,10 @@ class NoteController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required | string | max:255',
-            'content'=> 'nullable | string',
+            'noteTitle' => 'required|string|max:255',
+            'noteContent' => 'nullable|string',
         ]);
-
+        
         $note = Note::create($validated);
         return response()->json($note, 201);
     }
@@ -76,11 +76,11 @@ class NoteController extends Controller
         }
 
         $validated = $request->validate([
-            'title'=>'required | string | max:255',
-            'content'=>'nullable | string',
+            'noteTitle' => 'required|string|max:255',
+            'noteContent' => 'nullable|string',
         ]);
-
-        $note->update($validated);
+        
+        $note->update($validated);        
         return response()->json($note, 200);
     }
 
@@ -184,4 +184,31 @@ class NoteController extends Controller
         return response()->json(['message' => 'Password updated successfully.']);
     }
 
+    // Thêm vào cuối class NoteController
+
+    public function autoSave(Request $request, $id)
+    {
+        $note = Note::find($id);
+
+        if (!$note) {
+            return response()->json(['message' => 'Note not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'noteTitle' => 'nullable|string|max:255',
+            'noteContent' => 'nullable|string',
+        ]);
+        
+        if (isset($validated['noteTitle'])) {
+            $note->noteTitle = $validated['noteTitle'];
+        }
+        
+        if (isset($validated['noteContent'])) {
+            $note->noteContent = $validated['noteContent'];
+        }
+        
+        $note->save();
+        
+        return response()->json(['message' => 'Note auto saved successfully']);
+    }
 }
